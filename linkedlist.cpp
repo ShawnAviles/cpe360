@@ -1,6 +1,7 @@
 // Shawn Aviles
-// March 8, 2022
-// linked list
+// March 31, 2022
+// linked list - Midterm Take Home
+// I pledge my honor that I have abided by the Stevens Honor System. -Shawn Aviles
 
 #include<iostream>
 using namespace std;
@@ -106,16 +107,90 @@ public:
             cout << "Invalid position" << endl;
             return;
         }
-
-        
     }
-    // 3. Display
+
+    /* 3.
+    7) Given access to the "head" pointer, write a function to find and delete a value (key) from
+    a LinkedList. Your function should search for the value (key), and delete the first
+    occurrence of that value. If the value does not exist in the list, your function prints an
+    appropriate message and deletes nothing.
+    In other words, implement void findAndDelete (int key)
+    */
+    void findAndDelete(int key) {
+        // empty linked list - edge case
+        if (head == NULL) {
+            cout << "List is empty!" << endl;
+            return;
+        }
+        // if key value is at head
+        if (key == head->value) {
+            Chunk *temp = head;
+            head = head->next;
+            delete temp;
+            size--; // needed to work in LL class but not needed for Take Home #7
+            return;
+        }
+        // delete key
+        else {
+            Chunk *chase, *follow;
+            chase = follow = head;
+
+            while (chase != NULL) {
+                if (key == chase->value) {
+                    follow->next = chase->next;
+                    delete chase;
+                    size--; // needed to work in LL class but not needed for Take Home #7
+                    return;
+                }
+                follow = follow->next;
+                chase = follow->next;
+            }
+            cout << "Value does not exist in the list " << endl;
+        }
+    }
+
+    /* 4.
+    8. Write a function to reverse the contents of a linked list. For e.g., a list like
+    "head->1-2-3-NULL" becomes "head-›3-2>1-›NULL" after the function call.
+    Implement void reverseList()
+    */
+    void reverseList() {
+        Chunk *prev = NULL;
+        Chunk *curr = head;
+        Chunk *next;
+
+        while (curr != NULL) {
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        head = prev;
+    }
+
+    /* 5.
+    9. Write a function to delete every node in the linked list. After your function call, every
+    chunk should be deleted and the 'head' pointer set to NULL. In other words, implement
+    void deleteLinkedList()
+    */
+    void deleteLinkedList() {
+        Chunk *temp = head;
+        while (temp != NULL) {
+            head = head->next;
+            delete temp;
+            temp = head;
+        }
+        size = 0; // needed to work in LL class but not needed for Take Home #9
+        head = NULL;
+    }
+
+
+    // 6. Display
     void displayContents() {
         Chunk *temp = head;
-
         cout << "----------\nLinked List: ";
         for (int i = 0; i < size; i++){
-            cout << temp -> value << " --> ";
+            cout << temp->value << " --> ";
             temp = temp->next;
         }
         cout << "NULL\n----------\n";
@@ -130,8 +205,11 @@ int main() {
     while(1) {
         cout << "Press 1 to add something to the head of the linked list" << endl;
         cout << "Press 2 to add something anywhere to the linked list" << endl;
-        cout << "Press 3 to remove something from the linked list" << endl;
-        cout << "Press 4 to display contents" << endl;
+        cout << "Press 3 to remove from a position of the linked list" << endl;
+        cout << "Press 4 to remove specifc value from the linked list" << endl;
+        cout << "Press 5 to reverse the linked list" << endl;
+        cout << "Press 6 to delete all values from the linked list" << endl;
+        cout << "Press 7 to display contents" << endl;
         cout << "Anythng else to quit" << endl;
         cin >> choice;
 
@@ -153,7 +231,16 @@ int main() {
                 cin >> pos;
                 linked.removeFromPosistion(pos);
                 break;
-            case 4: linked.displayContents();
+            case 4: 
+                cout << "Enter value to remove:  " << endl;
+                cin >> value;
+                linked.findAndDelete(value);
+                break;
+            case 5: linked.reverseList();
+                break;
+            case 6: linked.deleteLinkedList();
+                break;
+            case 7: linked.displayContents();
                 break;
             default: cout << "Goodbye!" << endl;
                 exit(1);
