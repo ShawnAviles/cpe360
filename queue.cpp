@@ -58,7 +58,7 @@ public:
             follow = chase = head;
             while (chase->next != NULL) {
                 follow = chase;
-                chase = chase ->next;
+                chase = chase->next;
             }
             follow->next = NULL;
             cout << "About to delete: " << chase->value << endl;
@@ -69,7 +69,7 @@ public:
     }
 
     // display contents of Q
-    void display() { // O(n)
+    void printContents() { // O(n)
         Chunk *temp;
 
         if(head == NULL) {
@@ -105,7 +105,7 @@ int main(){
                     break;
             case 2: Q.dequeue();
                     break;
-            case 3: Q.display();
+            case 3: Q.printContents();
                     break;
             default: exit(1);
         }
