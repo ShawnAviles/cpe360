@@ -94,7 +94,36 @@ public:
         }
     }
     // 3. Delete a value (key)
-    // 4. Display contents: (a) in--, (b) pre--, (c) post-- order
+    // 4. Display contents: (a) in--, (b) pre--, (c) post-- order'
+    void inorder(TreeNode *start) {
+        if (start == NULL) return;
+        else {
+            // left, root, right
+            inorder(start->left);
+            cout << start->value << "  " << endl;
+            inorder(start->right);
+        }
+    }
+
+    void preorder(TreeNode *start) {
+        if (start == NULL) return;
+        else {
+            // root, left, right
+            cout << start->value << "  " << endl;
+            preorder(start->left);
+            preorder(start->right);
+        }
+    }
+
+    void postorder(TreeNode *start) {
+        if (start == NULL) return;
+        else {
+            // left, right, root
+            postorder(start->left);
+            postorder(start->right);
+            cout << start->value << "  " << endl;
+        }
+    }
 };
 
 int main() {
