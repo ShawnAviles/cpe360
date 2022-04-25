@@ -1,6 +1,11 @@
-// Shawn Aviles
-// April 12, 2022
-// Binary Search Tree
+/*
+Shawn Aviles
+April 24, 2022
+Binary Search Tree
+
+I pledge my honor that I have abided by the Stevens Honor System. -Shawn Aviles
+*/
+
 
 #include <iostream>
 using namespace std;
@@ -93,6 +98,16 @@ public:
             }
         }
     }
+
+    int minValTree(TreeNode *start) {
+        // this case is not needed in the context of case 3
+        if (start == NULL) {
+            return -1;
+        }
+
+        while (start->left != NULL) start = start->left;
+        return start->value;
+    }
     
     // 3. Delete a value (key)
     void deleteNode(int key, TreeNode *start) {
@@ -123,107 +138,89 @@ public:
 
         if (key == fast->value) {
             // we found it! Yay
-            // so lets figure our what case are we dealing with
+            // so lets figure out what case are we dealing with
+            // take into account if root or not
 
             // case 1: leaf node, no children
             if (fast->left == NULL && fast->right == NULL) {
-                // // delete the node
-                cout << "Deleting leaf node - Case I" << endl;
-                // if (key < slow->value) {
-                //     slow->left = NULL;
-                // }
-                // else {
-                //     slow->right = NULL;
-                // }
+                // delete the node
+                cout << "\nDeleting leaf node - Case I\n" << endl;
+
+                if (fast == start) {
+                    start = NULL;
+                }
+                else {
+                    if (key < slow->value) { // slow->left == fast;
+                        slow->left = NULL;
+                        cout << "About to delete: " << fast->value << endl;
+                    }
+                    else {
+                        slow->right = NULL;
+                        cout << "About to delete: " << fast->value << endl;
+                    }
+                }
+                delete fast;
             }
 
             // case 2: node with one child
             else if (fast->left == NULL && fast->right != NULL){
-                // // delete the node
-                cout << "Deleting node with one child - Case II" << endl;
-                // if (key < slow->value) {
-                //     slow->left = fast->right;
-                // }
-                // else {
-                //     slow->right = fast->right;
-                // }
+                // delete the node
+                cout << "\nDeleting node with one child - Case II" << endl;
+
+                if (fast == start) {
+                    start = fast->right;
+                }
+                else {
+                    if (key < slow->value) {
+                        slow->left = fast->right;
+                        cout << "About to delete: " << fast->value << endl;
+                    }
+                    else {
+                        slow->right = fast->right;
+                        cout << "About to delete: " << fast->value << endl;
+                    }
+                }
+                delete fast;
+                
             }
             else if (fast->left != NULL && fast->right == NULL) {
-                // // delete the node
-                cout << "Deleting node with one child - Case II" << endl;
-                // if (key < slow->value) {
-                //     slow->left = fast->left;
-                // }
-                // else {
-                //     slow->right = fast->left;
-                // }
+                // delete the node
+                cout << "\nDeleting node with one child - Case II" << endl;
+
+                if (start == fast) {
+                    start = fast->left;
+                }
+                else {
+                    if (key < slow->value) {
+                        slow->left = fast->left;
+                        cout << "About to delete: " << fast->value << endl;
+                    }
+                    else {
+                        slow->right = fast->left;
+                        cout << "About to delete: " << fast->value << endl;
+                    }
+                }
+                delete fast;
             }
 
             // case 3: node with two children
             else {
-                // // find the smallest value in the right subtree
-                // // and replace the value of the node to be deleted
-                cout << "Deleting node with two children - Case III" << endl;
-                // TreeNode *temp = fast->right;
-                // TreeNode *temp2 = fast;
+                // find the smallest value in the right subtree
+                // and replace the value of the node to be deleted
+                cout << "\nDeleting node with two children - Case III" << endl;
+                
+                // 1. breathe
+                // 2. don't actually delete this node
+                // 3. we'll find a value to swap with this node
+                // 4. minValueRightSubTree
 
-                // while (temp->left != NULL) {
-                //     temp2 = temp;
-                //     temp = temp->left;
-            }
-            // fast->value = temp->value;
-            // temp2->left = temp->right; 
-        }
-
-
-        /*
-        // possible recursion refactoring 
-        if (key == start->value) {
-            // found the node to delete
-            // check to see if node has children
-            if (start->left == NULL && start->right == NULL) {
-                // no children
-                // delete node
-                delete start;
-                start = NULL;
-            }
-            else if (start->left == NULL) {
-                // only right child
-                // delete node
-                TreeNode *temp = start;
-                start = start->right;
-                delete temp;
-            }
-            else if (start->right == NULL) {
-                // only left child
-                // delete node
-                TreeNode *temp = start;
-                start = start->left;
-                delete temp;
-            }
-            else {
-                // two children
-                // find the inorder successor
-                TreeNode *temp = start->right;
-                while (temp->left != NULL) {
-                    temp = temp->left;
-                }
-
-                // copy the inorder successor value to the node to delete
-                start->value = temp->value;
-
-                // delete the inorder successor
-                deleteNode(temp->value, start->right);
+                int swap = minValTree(fast->right);
+                deleteNode(swap, root);
+                fast->value = swap;
             }
         }
-        else if (key > start->value) {
-            deleteNode(key, start->right);
-        }
-        else {
-            deleteNode(key, start->left);
-        }
 
-        */
+
     }
 
     // 4. Display contents: (a) in--, (b) pre--, (c) post-- order'
@@ -262,7 +259,7 @@ int main() {
     BST tree;
     int choice, value;
     // we'll jumpstart tree with a few values
-    // 30, 15, 60, 7, 22, 45, 17, 27, 75 
+    // 30, 15, 60, 7, 22, 45, 17, 27, 75, 100, 1, 40, 35, 42, 48, 55, 65
     tree.addValue(30);
     tree.addValue(15);
     tree.addValue(60);
@@ -272,11 +269,22 @@ int main() {
     tree.addValue(17);
     tree.addValue(27);
     tree.addValue(75);
+    tree.addValue(100);
+    tree.addValue(1);
+    tree.addValue(40);
+    tree.addValue(35);
+    tree.addValue(42);
+    tree.addValue(48);
+    tree.addValue(55);
+    tree.addValue(65);
 
     while(1) {
         cout << "Enter 1 to add a new value" << endl;
-        cout << "Enter 2 to search for a value" << endl;
-        cout << "Enter 3 to delete a value" << endl;
+        cout << "Enter 2 to search" << endl;
+        cout << "Enter 3 for in-order" << endl;
+        cout << "Enter 4 for pre-order" << endl;
+        cout << "Enter 5 for post-order" << endl;
+        cout << "Enter 6 to delete a node" << endl;
         cout << "(other options coming soon)" << endl;
         cin >> choice;
 
@@ -292,9 +300,22 @@ int main() {
                 tree.searchBST(value, tree.root);
                 break;
             case 3:
+                cout << "Displaying in-order" << endl;
+                tree.inorder(tree.root);
+                break;
+            case 4:
+                cout << "Displaying pre-order" << endl;
+                tree.preorder(tree.root);
+                break;
+            case 5:
+                cout << "Displaying post-order" << endl;
+                tree.postorder(tree.root);
+                break;
+            case 6:
+                cout << "Deleting Value" << endl;
                 cout << "Enter a value to delete" << endl;
                 cin >> value;
-                tree.searchBST(value, tree.root);
+                tree.deleteNode(value, tree.root);
                 break;
             default:
                 cout << "Goodbye!" << endl;
