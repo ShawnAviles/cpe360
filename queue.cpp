@@ -65,7 +65,6 @@ public:
             delete chase;  
 
         }
-
     }
 
     // display contents of Q
