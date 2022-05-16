@@ -333,13 +333,6 @@ int main() {
         cout << "Customers in line: " << Q.customersInLine <<  endl;
     }
 
-    /*
-    2.1 how good is the current system
-    Average Customer Wait Time
-    Average Customer Service Time
-    Average Queue Length
-    Best Case and Worse Case
-    */
     cout << "Optimization 1 - Using one queue line but two registers" << endl;
     cout << "Average Customer Wait Time: " << (double)Q.waitTime /(double)Q.totalCustomers << endl;
     cout << "Average Customer Service Time: " << (double)Q.serviceTime/(double)Q.totalCustomers << endl;
